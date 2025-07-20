@@ -1,5 +1,7 @@
 data/*
 output/*
 .venv/*
-uv.lock
+.conda/*
+*.lock
 **/__pycache__
+.*
