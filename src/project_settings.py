@@ -5,14 +5,7 @@ import tomllib
 
 import omegaconf
 
-# Declare configuration files. Configuration files are loaded in order. Later
-# configuration files overwrite earlier files recursively. Interpolated values
-# (e.g. '${paths.data.base}') are re-evaluated after all configuration files
-# have been loaded.
-config_files = [
-    "config/settings.toml",
-    "config/settings.local.toml",
-]
+config_files = sorted(Path("config").glob("*.toml"))
 
 
 # Read TOML config file (OmegaConf does not support TOML by default)
