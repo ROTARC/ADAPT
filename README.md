@@ -63,39 +63,39 @@ in your terminal.
 
 2. Activate the virtual environment.
 
-   ```sh
-   conda activate ./.conda
-   ```
+    ```sh
+    conda activate ./.conda
+    ```
 
 3. Install project as editable package.
 
     **NB: Before installing the project, set the project name. See [pyproject.toml](#pyprojecttoml).**
 
-   ```sh
-   pip install -e .
-   ```
+    ```sh
+    pip install -e .
+    ```
 
 ### Option 2: `uv` (advanced users)
 
 1. Create a virtual environment
 
-   ```sh
-   uv venv --python 3.13
-   ```
+    ```sh
+    uv venv --python 3.13
+    ```
 
 2. Install the current project.
 
-  **NB: Before installing the project, set the project name. See [pyproject.toml](#pyprojecttoml).**
+    **NB: Before installing the project, set the project name. See [pyproject.toml](#pyprojecttoml).**
   
-   ```sh
-   uv pip install -e .
-   ```
+    ```sh
+    uv pip install -e .
+    ```
 
 3. Run your code.
 
-   ```sh
-   uv python analysis/example_script.py
-   ```
+    ```sh
+    uv python analysis/example_script.py
+    ```
 
 
 ## Directory structure
@@ -203,17 +203,25 @@ from the same file, and a good description. E.g.:
 - `outputs/reports/04-01-feature-analysis-{subject_id}.pdf` for a PDF including
   figures and tables created by `04-calculate_something.py`
 
-If there are many subjects, it might be convenient to put outputs in respective
-subdirectories. Always keep the full filename, in case you collect them per
-subject.
+If there are many subjects or multiple figures per subject, it might be
+convenient to put outputs in respective subdirectories. Always keep the full
+filename, in case you collect them per subject.
 
 - `outputs/figures/02-01-spectrogram/02-01-spectrogram-{subject_id}.png`
 
-Optionally, you can add the version number of your project to the output file
-name (`02-01-spectrogram-{subject_id}-{version}.png`). The version number can be
-gotten with `from __version__ import __version__`. This enables comparing
-results between different code versions, and prevents combining up-to-date and
-older results.
+#### Run identifiers
+
+It might be useful to add a unique identifier to the name of output files. This
+prevents overwriting previous results and accidentally combining up-to-date and
+out-of-date results. The identifier can be based on the current version of your
+project (`from __version__ import __version__`), the current git commit hash,
+[^gitpython] or a sequential run number. This template includes the function
+`project_info.get_run_identifier()` that tracks the run number in a file (set by
+`settings.paths.run_identifier`, default `output/.run_identifier`) and returns a
+formatted version (format set as `settings.run_identifier.format`, default
+`"run{:04d}"`, e.g., `"run0425"`).
+
+### Documentation
 
 Documentation and instructions about the analysis process should go in `docs/`.
 This should at a minimum contain information on how to run the analysis. It
@@ -327,17 +335,17 @@ print(settings.filtering.order)
 - Write a README.md (replacing this file) with a short explanation of the repository: what is the
   goal, and how can people use it? For simple projects, this could suffice as
   documentation. For more complex projects, it should refer to more extensive
-  documentation. 
+  documentation.
 - All interim and processed data should be derived from source data and
   annotations. This derivation should be reproducible, such that interim and
   processed files can be removed without losing information.
 - Files in `output/` should be human-readable. Data used for further analysis,
-  e.g., a `pandas` data frame, should be stored as interim data.
+  e.g., a `pandas` data frame or export for further analysis in R, should be
+  stored as interim data.
 - Use git for source version control of your code. Regularly make atomic
   commits. Update the version in `src/__version__.py` and create a git tag at
   the corresponding commit whenever the code has reached a next milestone or
-  stable state. Add the version of the project to the name of output
-  files.[^gitpython] Data and output do not belong in a git repository. 
+  stable state. Data and output do not belong in a git repository. 
 - Analysis workflows often have two stages: first process and analysis data from
   individual measurements or subjects, then combine data for a final comparison.
   Avoid looping over measurements or subjects for complex analysis workflows in
@@ -351,7 +359,8 @@ print(settings.filtering.order)
 
   ```python
   # subject_id can be set by a calling script (see below)
-  # if not, i.e., you're running this file seperately, the value is set to "S004"
+  # if it was not set before running this file, i.e., you're running this file seperately, 
+  # the value is set to # "S004"
   
   subject_id = globals().get("subject_id", "S004")
   
@@ -378,29 +387,33 @@ print(settings.filtering.order)
       # Get the ','-delimited values from the first line
       subjects = next(csv.reader(csvfile, delimiter=","))
 
+  # Load script outside for loop to prevent re-reading (a different version of) the file
+  script = open("analysis/02-convert_data.py").read()
+
   for subject_id in subjects:
-      exec(open("analysis/02-convert_data.py").read(), {"subject_id": subject_id})
+      exec(script, {"subject_id": subject_id})
   ```
 
   Note that using `exec` is generally not recommended. In this case, it calls
   one of your own files, so it should be safe. Use with caution.
 
-[^gitpython]: Alternatively, you can add the first 7 characters of the current git commit
-  hash, removing the need to change the version often. You can get
-  the commit hash using `gitpython`. Install `gitpython` using `pip` or `uv`. 
+[^gitpython]: You can get the commit hash using `gitpython`. Install `gitpython` using `pip`
+    or `uv`. 
 
     ```python
-    import gitpython
+    from gitpython import Repo
     import os
     repo = Repo(os.getcwd())
     short_commit_sha = repo.head.commit.hexsha[:7]
     ```
 
-    These are random, so results are not chronological if ordered by name. With a
+    Commit hashes are not chronological if ordered by name. With a
     bit more work, you can add a commit count, resulting in a chronological order
     of files. 
 
     ```python
-    n_commits = len(tuple(repo.iter_commits()))  # get the number of commits
+    n_commits = len(tuple(repo.iter_commits()))  # Get the number of commits
     file_name = f"02-01-spectrogram-{subject_id}-{n_commits:03d}-{short_commit_sha}.png"
     ```
+
+    Note that using git commit hashes requires frequent commits to be useful.

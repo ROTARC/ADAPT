@@ -12,3 +12,9 @@ base = "./output"
 figures = "${paths.output.base}/figures"
 tables = "${paths.output.base}/tables"
 reports = "${paths.output.base}/reports"
+
+[paths]
+run_identifier = "${paths.output.base}/.run_identifier"
+
+[run_identifier]
+format = "run{:04d}"
