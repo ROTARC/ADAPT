@@ -160,13 +160,14 @@ to number them in order of logical operation. E.g.:
   final version of the data in `data/processed/`
 - `analysis/04-calculate_something.py` generates output data
 
-Reusable code should go in the `src/` directory. As a rule: never import code from a
-file in `analysis/`, but import code from modules in `src/`. We recommend a
-workflow where you develop code as a script or notebook and — once finished —
+Reusable code should go in the `src/` directory. As a rule: never import code
+from a file in `analysis/`, but import code from modules in `src/`. We recommend
+a workflow where you develop code as a script or notebook and — once finished —
 formalize it in functions or classes in modules inside `src/`. This might also
-be a good time to write tests for your code, which should be stored in the
-`tests/` directory. Catherine Nelson wrote [a book](https://www.amazon.com/Software-Engineering-Data-Scientists-Notebooks-ebook/dp/B0CWMCN8TD) about this process and
-recently gave a talk about it at the [PyCon 
+be a good time to write documentation as well as tests for your code, which
+should be stored in the `tests/` directory. Catherine Nelson wrote [a
+book](https://www.amazon.com/Software-Engineering-Data-Scientists-Notebooks-ebook/dp/B0CWMCN8TD)
+about this process and recently gave a talk about it at the [PyCon
 2025](https://www.youtube.com/watch?v=o4hyA4hotxw) conference. There are many
 other resources on this topic.
 
@@ -358,12 +359,17 @@ print(settings.filtering.order)
   **Example `02-convert_data.py`**:
 
   ```python
-  # subject_id can be set by a calling script (see below)
-  # if it was not set before running this file, i.e., you're running this file seperately, 
-  # the value is set to # "S004"
-  
-  subject_id = globals().get("subject_id", "S004")
-  
+  # 'subject_id' can be provided on the command line or by a calling script (see
+  # below). If it was not provided, i.e., when the script is run without command
+  # line arguments, the value is set to 'S004'.
+  import argparse
+
+
+  parser = argparse.ArgumentParser()
+  parser.add_argument("--subject_id", type=str, default="S004")
+  args = parser.parse_args()
+  subject_id = args.subject_id
+
   # <perform a lot of complicated steps>
   ```
 
@@ -381,6 +387,7 @@ print(settings.filtering.order)
 
   ```python
   import csv
+  import subprocess
   from project_settings import settings
 
   with (settings.paths.data.annotations / "subjects.csv").open("r") as csvfile:
@@ -388,10 +395,16 @@ print(settings.filtering.order)
       subjects = next(csv.reader(csvfile, delimiter=","))
 
   # Load script outside for loop to prevent re-reading (a different version of) the file
-  script = open("analysis/02-convert_data.py").read()
+  script_file = "analysis/02-convert_data.py"
 
   for subject_id in subjects:
-      exec(script, {"subject_id": subject_id})
+      try:
+          subprocess.run(
+              ["python", script_file, "--subject_id", subject_id],
+              check=True,
+          )
+      except subprocess.CalledProcessError as e:
+          print(f"Error processing subject {subject_id}: {e}")
   ```
 
   Note that using `exec` is generally not recommended. In this case, it calls
