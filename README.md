@@ -367,7 +367,7 @@ print(settings.filtering.order)
 
   parser = argparse.ArgumentParser()
   parser.add_argument("--subject_id", type=str, default="S004")
-  args = parser.parse_args()
+  args, _ = parser.parse_known_args()
   subject_id = args.subject_id
 
   # <perform a lot of complicated steps>
