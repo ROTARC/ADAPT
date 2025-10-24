@@ -7,8 +7,8 @@ name = ""
 description = ""
 dynamic = ["version"]
 requires-python = ">= 3.11"
-authors = [{ name = "Peter Somhorst" }]
 dependencies = ["omegaconf>=2.3.0"]
+authors = []
 
 [tool.hatch.version]
 path = "src/__version__.py"
