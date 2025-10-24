@@ -2,21 +2,23 @@
 
 This is a lightweight and structured template for data analysis projects. The
 goal is to keep work organized, reproducible, and easy to pick up or hand off.
-We built this template with small-project medical data analysis in mind, but
-serves other domains and larger projects as well.
+We built this template with small to medium sized projects for medical data
+analysis in mind, but serves other domains and larger projects as well.
 
-Feedback and suggestions for improvement are welcome. Please create an [issue on
-GitHub](https://github.com/ROTARC/ADAPT/issues).
+Feedback and suggestions for improvement are welcome. Please [create an
+issue]](https://github.com/ROTARC/ADAPT/issues) on GitHub.
 
 ### Note on this `README.md` file
 
 Once you have created your own repository from this template, you should replace
 this `README.md` file with your own. You can rename this file to `TEMPLATE.md`
-(or similar) to keep it as a reference.
+or similar to keep it as a reference.
 
-## Getting this template
+## Using this template
 
-### Option 1: Create a repository from this template (recommended)
+### Get the template files
+
+#### Option 1: Create a repository from this template (recommended)
 
 Follow the [instructions on
 GitHub](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template)
@@ -30,22 +32,22 @@ Tower](https://www.git-tower.com/help/guides/manage-repositories/clone-remote-re
 or through [GitHub
 itself](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository?tool=webui).
 
-### Option 2: Download the files
+#### Option 2: Download the files
 
-Download the latest version of this template from [GitHub:
-ROTARC](https://github.com/rotarc/adapt). Extract as your project directory.
+Download the latest version of this template of [the ADAPT
+template](https://github.com/rotarc/adapt). Extract as your project directory.
 
-## Set your project name
+### Set your project name
 
 Before installing the project, set the project name. See
 [pyproject.toml](#pyprojecttoml).
 
-## Create a virtual environment and install your project
+### Create a virtual environment and install your project
 
 To create a virtual environment and install your project, run the commands below
 in your terminal.
 
-### Option 2: `uv` (recommended)
+#### Option 1: `uv` (recommended)
 
 1. Create a virtual environment
 
@@ -67,7 +69,11 @@ in your terminal.
     uv run python analysis/example_script.py
     ```
 
-### Option 2: `conda`
+#### Option 2: `conda`
+
+We do no longer recommend `conda`. Only use `conda` if you use the `conda` or
+`conda-forge` package repository, and you have the appropriate licenses to use
+it.
 
 1. Create a virtual environment.
 
@@ -216,11 +222,11 @@ filename, in case you collect them per subject.
 It might be useful to add a unique identifier to the name of output files. This
 prevents overwriting previous results and accidentally combining up-to-date and
 out-of-date results. The identifier can be based on the current version of your
-project (`from __version__ import __version__`), the current git commit hash,
+project (available as `project.version`), the current git commit hash,
 [^gitpython] or a sequential run number. This template includes the function
-`project_info.get_run_identifier()` that tracks the run number in a file (set by
-`settings.paths.run_identifier`, default `output/.run_identifier`) and returns a
-formatted version (format set as `settings.run_identifier.format`, default
+`project.run.get_run_identifier()` that tracks the run number in a file (set by
+`project.settings.paths.run_identifier`, default `output/.run_identifier`) and returns a
+formatted version (format set as `project.settings.run_identifier.format`, default
 `"run{:04d}"`, e.g., `"run0425"`).
 
 ### Documentation
@@ -250,8 +256,9 @@ install -e .` or `uv sync`.
 [^1]: If you use `uv` you can add a dependency by running `uv add <package>` in
     a terminal instead of manually editing `pyproject.toml`.
 
-Info from the `pyproject.toml` is available in Python as `project.version`,
-`project.name` or as full dictionary as `project._pyproject_data`.
+Some info from the `pyproject.toml` is available in Python as `project.version`,
+`project.name`. The complete file is available as a dictionary as
+`project._pyproject_data`.
 
 More information on `pyproject.toml` can be found in the [Python documentation](https://packaging.python.org/en/latest/guides/writing-pyproject-toml/).
 
