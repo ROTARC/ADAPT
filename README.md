@@ -5,14 +5,14 @@ goal is to keep work organized, reproducible, and easy to pick up or hand off.
 We built this template with small-project medical data analysis in mind, but
 serves other domains and larger projects as well.
 
-Feedback and suggestions for improvement are welcome. Please create an issue on
-GitHub.
+Feedback and suggestions for improvement are welcome. Please create an [issue on
+GitHub](https://github.com/ROTARC/ADAPT/issues).
 
 ### Note on this `README.md` file
 
 Once you have created your own repository from this template, you should replace
-this `README.md` file with your own. You can rename this file to `TEMPLATE.md` (or
-similar) to keep it as a reference.
+this `README.md` file with your own. You can rename this file to `TEMPLATE.md`
+(or similar) to keep it as a reference.
 
 ## Getting this template
 
@@ -28,25 +28,46 @@ Code](https://learn.microsoft.com/en-us/azure/developer/javascript/how-to/with-v
 [Git
 Tower](https://www.git-tower.com/help/guides/manage-repositories/clone-remote-repository/windows)
 or through [GitHub
-itself](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository?tool=webui). 
+itself](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository?tool=webui).
 
 ### Option 2: Download the files
 
-Download the latest version of this template from https://github.com/rotarc/adapt. Extract as your project
-directory.
-
-<!-- TODO: add link to repo -->
+Download the latest version of this template from [GitHub:
+ROTARC](https://github.com/rotarc/adapt). Extract as your project directory.
 
 ## Set your project name
 
-Before installing the project, set the project name. See [pyproject.toml](#pyprojecttoml).
+Before installing the project, set the project name. See
+[pyproject.toml](#pyprojecttoml).
 
 ## Create a virtual environment and install your project
 
 To create a virtual environment and install your project, run the commands below
-in your terminal. 
+in your terminal.
 
-### Option 1: `conda` (recommended)
+### Option 2: `uv` (recommended)
+
+1. Create a virtual environment
+
+    ```sh
+    uv venv --python 3.13
+    ```
+
+2. Install the current project.
+
+    **NB: Before installing the project, set the project name. See [pyproject.toml](#pyprojecttoml).**
+  
+    ```sh
+    uv sync
+    ```
+
+3. Run your code.
+
+    ```sh
+    uv run python analysis/example_script.py
+    ```
+
+### Option 2: `conda`
 
 1. Create a virtual environment.
 
@@ -55,11 +76,11 @@ in your terminal.
    ```
 
    This template requires Python 3.11 or higher. At the time of writing, `conda`
-   supports Python 3.12 or lower. 
+   supports Python 3.12 or lower.
 
    Alternatively, you can create a named `conda` virtual environment. See [the
    documentation](https://docs.conda.io/projects/conda/en/latest/commands/create.html)
-   for details. 
+   for details.
 
 2. Activate the virtual environment.
 
@@ -75,37 +96,14 @@ in your terminal.
     pip install -e .
     ```
 
-### Option 2: `uv` (advanced users)
-
-1. Create a virtual environment
-
-    ```sh
-    uv venv --python 3.13
-    ```
-
-2. Install the current project.
-
-    **NB: Before installing the project, set the project name. See [pyproject.toml](#pyprojecttoml).**
-  
-    ```sh
-    uv pip install -e .
-    ```
-
-3. Run your code.
-
-    ```sh
-    uv python analysis/example_script.py
-    ```
-
-
 ## Directory structure
 
 The directory structure of this template is designed to keep your project
-organized and reproducible. 
-Some important concepts are:
+organized and reproducible. Some important concepts are:
 
 - Files with different purposes are stored in different directories.
-- No extra files or directories should (generally) be stored in the root directory.
+- No extra files or directories should (generally) be stored in the root
+  directory, with the exception of project metadata files (e.g., [`mkdocs.yml`](https://www.mkdocs.org/user-guide/configuration/)).
 - Computer-readable outputs are considered data and should be stored in the
   `data/` directory, while human-readable outputs are stored in the `output/`
   directory.
@@ -114,42 +112,45 @@ Some important concepts are:
 - Reusable code should be stored in the `src/` directory, while scripts and
   notebooks should be stored in the `analysis/` directory.
 
-Below is an overview of the main directories and their purpose:
+Below is an overview of the main files/directories and their purpose:
 
 ```text
-├── .vscode/                # Editor configuration
-├── analysis/               # Scripts and notebooks for analysis
-├── config/                 # Configuration files (TOML format)
-│   ├── .secrets.toml       # API keys, credentials (gitignored)
-│   ├── settings.toml       # Base configuration
-│   └── settings.local.toml # User-specific overrides
-├── data/
-│   ├── annotations/        # Processing annotations
-│   ├── interim/            # Intermediate processing results
-│   ├── processed/          # Final data for analysis
-│   └── source/             # Raw data from experiments or instruments
-├── docs/                   # Documentation
-├── output/
-│   ├── figures/            # Saved plots and images
-│   ├── reports/            # Generated reports (PDFs, etc.)
-│   └── tables/             # Saved tables (CSV, Excel, etc.)
-├── references/             # Papers, links, background materials
-├── src/                    # Reusable Python modules
-│   ├── __version__.py      # Project version
-│   └── project_settings.py # Code to load settings with interpolation
-├── tests/                  # Tests for the project
-├── pyproject.toml          # Project metadata and dependencies
-└── README.md               # This file
+├── .vscode/                 # Editor configuration
+├── analysis/                # Scripts and notebooks for analysis
+├── config/                  # Configuration files (TOML format)
+│   ├── .secrets.toml        # API keys, credentials (gitignored)
+│   ├── settings.toml        # Base configuration
+│   └── settings.local.toml  # User-specific overrides
+├── data/ 
+│   ├── annotations/         # Processing annotations
+│   ├── interim/             # Intermediate processing results
+│   ├── processed/           # Final data for analysis
+│   └── source/              # Raw data from experiments or instruments
+├── docs/                    # Documentation
+├── output/ 
+│   ├── figures/             # Saved plots and images
+│   ├── reports/             # Generated reports (PDFs, etc.)
+│   └── tables/              # Saved tables (CSV, Excel, etc.)
+├── references/              # Papers, links, background materials
+├── src/                     # Reusable Python modules
+│   ├── __version__.py       # Project version
+│   └── project
+│       │   run.py           # Information and functions concerning the current project run
+│       └── settings.py      # Code to load settings with interpolation
+├── tests/                   # Tests for the project
+├── .gitignore               # Git ignore file 
+├── pyproject.toml           # Project metadata and dependencies
+└── README.md                # This file
 ```
 
 **Note**: Directories in this template that are otherwise empty contain a
-.gitkeep file. These files only exist to have git clone the directories. You can
-remove these files after your repository is cloned.
+`.gitkeep` file. These files only exist to store the directories in the
+repository. You can remove these files after cloning your repository.
 
 ### Code
 
 Script and notebook files should go in the `analysis/` directory. It is useful
-to number them in order of logical operation. E.g.:
+to number them in order of logical operation. E.g.,
 
 - `analysis/01-convert_data.py` converts source data to a more workable format
   in `data/interim/01-converted/`
@@ -172,11 +173,11 @@ about this process and recently gave a talk about it at the [PyCon
 other resources on this topic.
 
 The package has been set up such that any module inside `src/` can be directly
-imported. E.g.: 
+imported. E.g.,
 
-- `src/helper.py` can be imported using `import helper` 
+- `src/helper.py` can be imported using `import helper`
 - `src/plotting/plot_dataset.py` can be imported using `from plotting import
-plot_dataset.py` (or `import plotting` and using `plotting.plot_dataset(...)`). 
+plot_dataset.py` (or `import plotting` and using `plotting.plot_dataset(...)`).
 
 ### Data
 
@@ -193,7 +194,7 @@ information about the source data. For example:
 
 Any output should go in the `output/` directory. It is useful to include in the
 file name the number of the analysis file, then a number for subsequent outputs
-from the same file, and a good description. E.g.:
+from the same file, and a good description. E.g.,
 
 - `outputs/figures/02-01-spectrogram-{subject_id}.png` for a spectrogram created
   in `02-filter_data.py`
@@ -237,8 +238,8 @@ these references when appropriate.
 ## `pyproject.toml`
 
 The pyproject file contains information about your project. You should give the
-project a suitable name, description and author(s) information. The version of
-the project is stored in the file `src/__version__.py`. 
+project a suitable name, description, and author(s) information. The version of
+the project is stored in the file `src/__version__.py`.
 
 Project dependencies, i.e., packages and libraries your code requires, should be
 listed in `dependencies`. The only template dependency is
@@ -249,60 +250,71 @@ install -e .` or `uv sync`.
 [^1]: If you use `uv` you can add a dependency by running `uv add <package>` in
     a terminal instead of manually editing `pyproject.toml`.
 
-Documentation on `pyproject.toml` can be found [here](https://packaging.python.org/en/latest/guides/writing-pyproject-toml/).
+Info from the `pyproject.toml` is available in Python as `project.version`,
+`project.name` or as full dictionary as `project._pyproject_data`.
+
+More information on `pyproject.toml` can be found in the [Python documentation](https://packaging.python.org/en/latest/guides/writing-pyproject-toml/).
 
 ## Configuration
 
-All configuration is done via TOML files in the `config/` directory. All files with
-the `.toml` extension in this directory are automatically detected and loaded in
-alphabetical order. Settings from later files override those from earlier files,
-so you can control precedence by naming.
+This template offers an easy way to manage and load configuration settings. In
+short, settings are stored in TOML files in the `config/` directory, and can be
+accessed by importing `project.settings`.
 
-The template only contains a single `settings.toml` file. In case of large
+All files with the `.toml` extension in the `config/` directory are
+automatically detected and loaded in alphabetical order. Settings from later
+files override those from earlier files, so you can control precedence by
+naming.
+
+The template only contains a single `config/settings.toml` file. In case of large
 projects, you can split the configuration into multiple files. We recommend the
-following structure: 
+following structure:
 
 - Number files to control the order in which they are loaded.
-- Use a prefix to indicate the type of settings, e.g., `00-*` for path settings,
-  `10-*` for filtering settings, etc.
+- Use a prefix to indicate the type of settings, e.g., `config/00-*` for path settings,
+  `config/10-*` for filtering settings, etc.
 - When further splitting files of the same type, increment the number,
-  e.g., `01-paths-input.toml` for the first config file of a type,
-  `02-paths-output.toml` for the second file, etc.
-- Use `*.local.toml` for user-specific overrides, e.g., paths, that should not be
-  shared with others. Files ending in `.local.toml` should not be committed to a
-  git repository, and are therefore ignored using the `.gitignore` file in the
-  config directory.
-- Files that start with a dot, e.g., `.secrets.toml`, are ignored by git and
+  e.g., `config/01-paths-input.toml` for the first config file of a type,
+  `config/02-paths-output.toml` for the second file, etc.
+- Use `config/*.local.toml` for user-specific overrides, e.g., paths, that should not be
+  shared with others. Files ending in `config/.local.toml` should not be committed to a
+  git repository, and are therefore ignored using the `config/.gitignore` file.
+- Files that start with a dot, e.g., `config/.secrets.toml`, are ignored by git and
   should not be committed to a git repository. These files can contain sensitive
-  information, such as API keys or credentials. 
+  information, such as API keys or credentials.
 
 A possible configuration structure is:
 
 ```text
-.secrets.toml         # API keys, credentials (gitignored)
-00-paths.toml         # declares the base path
-01-paths-input.toml   # declares inputs paths
-02-paths-output.toml  # declares output paths
-03-paths.local.toml   # declares user-specific overrides (gitignored)
-10-filtering.toml
-20-visualization.toml
-``` 
+config/.secrets.toml          # API keys, credentials (gitignored)
+config/00-paths.toml          # declares the base path
+config/01-paths-input.toml    # declares inputs paths
+config/02-paths-output.toml   # declares output paths
+config/03-paths.local.toml    # declares user-specific overrides (gitignored)
+config/10-filtering.toml
+config/20-visualization.toml
+```
 
 `${...}` syntax is supported for interpolation (via
 [OmegaConf](https://omegaconf.readthedocs.io/en/2.3_branch/)). Interpolation is
 re-evaluated after all configuration files have been loaded. This means that you
-can overwrite settings used in earlier files in later files. For example, you can
-set the base path in `01-paths-output.toml` to a different value than in
-`00-paths-input.toml`. 
+can overwrite settings used in earlier files in later files. For example, you
+can set the base path in `config/01-paths-output.toml` to a different value than
+in `config/00-paths-input.toml`.
 
-Shared files (e.g. `10-*.toml`) should contain all settings that are shared
-between computers. However, settings that are specific to the computer the code
-runs on (likely only the source path), should be in `*.local.toml` or
-another appropriately named TOML file that is loaded later alphabetically.
+Shared files (e.g., `config/10-*.toml`) should contain all settings that are
+shared between computers. However, settings that are specific to the computer
+the code runs on (likely only the source path), should be in
+`config/*.local.toml` or another appropriately named TOML file that is loaded
+later alphabetically. If a local settings file is required, it is best to add an
+example template file, e.g., `config/10-paths.local.toml.template` to the
+repository.
 
-Settings should always be preferred over hard-coded values. This makes it easy to find the parameters used to perform your analysis, but also prevents values from being defined more than once, resulting in unexpected behavior.
+Settings should always be preferred over hard-coded values. This makes it easy
+to find the parameters used to perform your analysis, but also prevents values
+from being defined more than once, resulting in unexpected behavior.
 
-**Example `00-settings.toml`**:
+**Example `config/00-settings.toml`**:
 
 ```toml
 [paths.data]
@@ -316,7 +328,7 @@ cuttof = 25  # Hz
 order = 4
 ```
 
-**Example `01-settings.local.toml`**:
+**Example `config/01-settings.local.toml`**:
 
 ```toml
 [paths.data]
@@ -326,17 +338,17 @@ base = "/path/to/server"  # overrides setting in 00-settings.toml; paths.data.in
 Load configuration settings in Python:
 
 ```python
-from project_settings import settings
+from project import settings
 
 print(settings.filtering.order)
 ```
 
 ## Best practices
 
-- Write a README.md (replacing this file) with a short explanation of the repository: what is the
-  goal, and how can people use it? For simple projects, this could suffice as
-  documentation. For more complex projects, it should refer to more extensive
-  documentation.
+- Write a README.md (replacing this file) with a short explanation of the
+  repository: what is the goal, and how can people use it? For simple projects,
+  this could suffice as documentation. For more complex projects, it should
+  refer to more extensive documentation.
 - All interim and processed data should be derived from source data and
   annotations. This derivation should be reproducible, such that interim and
   processed files can be removed without losing information.
@@ -346,7 +358,8 @@ print(settings.filtering.order)
 - Use git for source version control of your code. Regularly make atomic
   commits. Update the version in `src/__version__.py` and create a git tag at
   the corresponding commit whenever the code has reached a next milestone or
-  stable state. Data and output do not belong in a git repository. 
+  stable state. Data (possibly except for test data) and output do not belong in
+  a git repository.
 - Analysis workflows often have two stages: first process and analysis data from
   individual measurements or subjects, then combine data for a final comparison.
   Avoid looping over measurements or subjects for complex analysis workflows in
@@ -354,9 +367,9 @@ print(settings.filtering.order)
   do all the work. A script file then can loop over subjects and call the
   function for all subjects. However, this is not always a good option,
   especially in the early phases of analysis. A secondary option is to have a
-  script file that performs analysis on a single subject. 
+  script file that performs analysis on a single subject.
 
-  **Example `02-convert_data.py`**:
+  **Example `analysis/02-convert_data.py`**:
 
   ```python
   # 'subject_id' can be provided on the command line or by a calling script (see
@@ -383,7 +396,7 @@ print(settings.filtering.order)
   S001,S003,S004,S005,S010
   ```
 
-  **Example `02a-run-convert_data.py`**:
+  **Example `analysis/02a-run-convert_data.py`**:
 
   ```python
   import csv
@@ -407,11 +420,8 @@ print(settings.filtering.order)
           print(f"Error processing subject {subject_id}: {e}")
   ```
 
-  Note that using `exec` is generally not recommended. In this case, it calls
-  one of your own files, so it should be safe. Use with caution.
-
 [^gitpython]: You can get the commit hash using `gitpython`. Install `gitpython` using `pip`
-    or `uv`. 
+    or `uv`.
 
     ```python
     from gitpython import Repo
@@ -422,7 +432,7 @@ print(settings.filtering.order)
 
     Commit hashes are not chronological if ordered by name. With a
     bit more work, you can add a commit count, resulting in a chronological order
-    of files. 
+    of files.
 
     ```python
     n_commits = len(tuple(repo.iter_commits()))  # Get the number of commits
