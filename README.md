@@ -78,7 +78,7 @@ it.
 1. Create a virtual environment.
 
    ```sh
-   conda create --prefix "./.conda" --python 3.12
+   conda create --prefix "./.conda" python=3.12
    ```
 
    This template requires Python 3.11 or higher. At the time of writing, `conda`
