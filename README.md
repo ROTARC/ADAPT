@@ -247,7 +247,7 @@ The pyproject file contains information about your project. You should give the
 project a suitable name, description, and author(s) information. The version of
 the project is stored in the file `src/__version__.py`.
 
-Project dependencies, i.e., packages and libraries your code requires, should be
+Project dependencies, i.e., packages and libraries required by your code, should be
 listed in `dependencies`. The only template dependency is
 [OmegaConf](https://omegaconf.readthedocs.io/en/2.3_branch/) for configuration
 management. After updating dependencies[^1], update your installation using `pip
@@ -264,9 +264,18 @@ More information on `pyproject.toml` can be found in the [Python documentation](
 
 ## Configuration
 
+Settings should always be preferred over hard-coded values. This makes it easy
+to find the parameters used to perform your analysis, but also prevents values
+from being defined more than once, resulting in unexpected behavior.
+
 This template offers an easy way to manage and load configuration settings. In
 short, settings are stored in TOML files in the `config/` directory, and can be
-accessed by importing `project.settings`.
+accessed with:
+
+```python
+from project import load_settings
+settings = load_settings()
+```
 
 All files with the `.toml` extension in the `config/` directory are
 automatically detected and loaded in alphabetical order. Settings from later
@@ -290,6 +299,8 @@ following structure:
   should not be committed to a git repository. These files can contain sensitive
   information, such as API keys or credentials.
 
+### Example configration file structure
+
 A possible configuration structure is:
 
 ```text
@@ -302,12 +313,16 @@ config/10-filtering.toml
 config/20-visualization.toml
 ```
 
+### Interpolation
+
 `${...}` syntax is supported for interpolation (via
 [OmegaConf](https://omegaconf.readthedocs.io/en/2.3_branch/)). Interpolation is
 re-evaluated after all configuration files have been loaded. This means that you
 can overwrite settings used in earlier files in later files. For example, you
 can set the base path in `config/01-paths-output.toml` to a different value than
 in `config/00-paths-input.toml`.
+
+### Local vs. shared config files
 
 Shared files (e.g., `config/10-*.toml`) should contain all settings that are
 shared between computers. However, settings that are specific to the computer
@@ -317,9 +332,6 @@ later alphabetically. If a local settings file is required, it is best to add an
 example template file, e.g., `config/10-paths.local.toml.template` to the
 repository.
 
-Settings should always be preferred over hard-coded values. This makes it easy
-to find the parameters used to perform your analysis, but also prevents values
-from being defined more than once, resulting in unexpected behavior.
 
 **Example `config/00-settings.toml`**:
 
@@ -350,12 +362,23 @@ from project import settings
 print(settings.filtering.order)
 ```
 
+### Handling non-existing paths
+
+All paths in the configuration are converted to `pathlib.Path` objects. If a
+directory path does not exist, a warning message is printed. You can suppress
+these warnings by passing `warn_if_missing=False` to `load_settings()`.
+
+You can create all non-existing directories by running
+`project.settings.create_missing_directories(settings)`, where `settings` is the
+loaded settings object. This also creates any parent directories that do not
+exist.
+
 ## Best practices
 
-- Write a README.md (replacing this file) with a short explanation of the
-  repository: what is the goal, and how can people use it? For simple projects,
-  this could suffice as documentation. For more complex projects, it should
-  refer to more extensive documentation.
+- Write a README.md (rename this file to TEMPLATE.md) with a short explanation
+  of the repository: what is the goal, and how can people use it? For simple
+  projects, this could suffice as documentation. For more complex projects, it
+  should refer to more extensive documentation.
 - All interim and processed data should be derived from source data and
   annotations. This derivation should be reproducible, such that interim and
   processed files can be removed without losing information.
