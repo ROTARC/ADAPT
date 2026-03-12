@@ -1,14 +1,7 @@
 import warnings
+from types import SimpleNamespace
 
-
-class _RunIdentifier:
-    value: int | None
-
-    def __init__(self, value: int | None = None):
-        self.value = value
-
-
-_run_identifier = _RunIdentifier()
+_run_identifier = SimpleNamespace(value=None)
 
 
 def get_run_identifier() -> int:
