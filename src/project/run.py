@@ -1,5 +1,6 @@
 import warnings
 from types import SimpleNamespace
+from project.settings import load_settings
 
 _run_identifier = SimpleNamespace(value=None)
 
@@ -7,10 +8,10 @@ _run_identifier = SimpleNamespace(value=None)
 def get_run_identifier() -> int:
     """Update the run identifier and return it."""
 
-    if _run_identifier.value is not None:
-        return _run_identifier.value
+    settings = load_settings()
 
-    from project_settings import settings
+    if _run_identifier.value is not None:
+        return settings.run_identifier.format.format(_run_identifier.value)
 
     # Read the last run identifier
     last_run_identifier_path = settings.paths.run_identifier
@@ -33,7 +34,6 @@ def get_run_identifier() -> int:
     _run_identifier.value = last_run_identifier + 1
 
     # Write the new run identifier back to the file
-
     with last_run_identifier_path.open("w") as fh:
         fh.write(str(_run_identifier.value))
 
