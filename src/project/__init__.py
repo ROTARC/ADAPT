@@ -2,6 +2,7 @@ from pathlib import Path
 import tomllib
 from __version__ import __version__ as version
 from .settings import load_settings
+from . import run
 
 
 def _load_pyproject():
@@ -16,4 +17,4 @@ def _load_pyproject():
 _pyproject_data = _load_pyproject()
 name = _pyproject_data.get("name")
 
-__all__ = ["load_settings", "version", "name"]
+__all__ = ["load_settings", "version", "name", "run"]
