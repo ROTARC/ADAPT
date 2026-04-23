@@ -431,6 +431,7 @@ exist.
   ```python
   import csv
   import subprocess
+  import sys
   from project_settings import settings
 
   with (settings.paths.data.annotations / "subjects.csv").open("r") as csvfile:
@@ -443,7 +444,7 @@ exist.
   for subject_id in subjects:
       try:
           subprocess.run(
-              ["python", script_file, "--subject_id", subject_id],
+              [sys.executable, script_file, "--subject_id", subject_id],
               check=True,
           )
       except subprocess.CalledProcessError as e:
