@@ -442,13 +442,17 @@ exist.
   script_file = "analysis/02-convert_data.py"
 
   for subject_id in subjects:
-      try:
-          subprocess.run(
-              [sys.executable, script_file, "--subject_id", subject_id],
-              check=True,
-          )
-      except subprocess.CalledProcessError as e:
-          print(f"Error processing subject {subject_id}: {e}")
+      command = [
+          sys.executable,
+          scriptfile,
+          "--subject_id",
+          subject_id,
+      ]
+      result = subprocess.run(command, text=True, capture_output=True)
+
+      if result.returncode != 0:
+          print(f"Error processing subject {subject_id}:", result.stderr)
+          continue
   ```
 
 [^gitpython]: You can get the commit hash using `gitpython`. Install `gitpython` using `pip`
