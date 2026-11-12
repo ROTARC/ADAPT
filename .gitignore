@@ -1,7 +1,24 @@
-data/*
-output/*
-.venv/*
-.conda/*
-*.lock
-**/__pycache__
-.*
+# Data and output: ignore contents, keep the folder structure
+data/**
+!data/**/
+!data/**/.gitkeep
+output/**
+!output/**/
+!output/**/.gitkeep
+
+# Secrets and local environment
+.env
+
+# Configuration files
+config/.*
+config/*.local.toml
+!config/*.template.toml
+
+# Environments, editors, caches
+.venv/
+.conda/
+.vscode/
+.*cache/
+__pycache__/
+.ipynb_checkpoints/
+.DS_Store
