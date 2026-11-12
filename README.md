@@ -277,10 +277,11 @@ from project import load_settings
 settings = load_settings()
 ```
 
-All files with the `.toml` extension in the `config/` directory are
-automatically detected and loaded in alphabetical order. Settings from later
-files override those from earlier files, so you can control precedence by
-naming.
+Files with the `.toml` extension in the `config/` directory are automatically
+detected and loaded in alphabetical order (except local config files). Settings
+from later files override those from earlier files, so you can control
+precedence by naming. Local config files (`config/*.local.toml`) are loaded
+last, providing a way to override non-local settings.
 
 The template only contains a single `config/settings.toml` file. In case of large
 projects, you can split the configuration into multiple files. We recommend the
@@ -294,7 +295,7 @@ following structure:
   `config/02-paths-output.toml` for the second file, etc.
 - Use `config/*.local.toml` for user-specific overrides, e.g., paths, that
   should not be shared with others. All local config files are loaded after
-  non-local config files. Files ending in `config/.local.toml` should not be
+  non-local config files. Files ending in `.local.toml` should not be
   committed to a git repository, and are therefore listed in `gitignore`.
 - Files that start with a dot, e.g., `config/.secrets.toml`, are ignored by git
   and should not be committed to a git repository. These files can contain
@@ -330,11 +331,11 @@ in `config/00-paths-input.toml`.
 Shared files (e.g., `config/10-*.toml`) should contain all settings that are
 shared between computers. However, settings that are specific to the computer
 the code runs on (likely only the source path), should be in
-`config/*.local.toml` or another appropriately named TOML file that is loaded
-later alphabetically. If a local settings file is required, it is best to add an
-example file, e.g., `config/10-paths.local.example.toml` to the repository.
-(`config/*.local.toml` are ignored by git, but `config/*.local.example.toml`
-aren't).
+`config/*.local.toml` or another appropriately named TOML file. If a local
+settings file is required, it is best to add an example file, e.g.,
+`config/10-paths.local.example.toml` to the repository. (`config/*.local.toml`
+are ignored by git, but `config/*.local.example.toml` aren't). Example files are
+never loaded. 
 
 
 **Potential `config/00-settings.toml`**:
