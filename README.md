@@ -292,16 +292,17 @@ following structure:
 - When further splitting files of the same type, increment the number,
   e.g., `config/01-paths-input.toml` for the first config file of a type,
   `config/02-paths-output.toml` for the second file, etc.
-- Use `config/*.local.toml` for user-specific overrides, e.g., paths, that should not be
-  shared with others. Files ending in `config/.local.toml` should not be committed to a
-  git repository, and are therefore ignored using the `config/.gitignore` file.
+- Use `config/*.local.toml` for user-specific overrides, e.g., paths, that
+  should not be shared with others. All local config files are loaded after
+  non-local config files. Files ending in `config/.local.toml` should not be
+  committed to a git repository, and are therefore listed in `gitignore`.
 - Files that start with a dot, e.g., `config/.secrets.toml`, are ignored by git
   and should not be committed to a git repository. These files can contain
   sensitive information, such as API keys or credentials. You can provide an
   example file, e.g., `config/.secrets.example.toml`, that can be committed to
   the repository. Make sure this DOES NOT contain any actual secrets.
 
-### Potential configration file structure
+### Potential configuration file structure
 
 A possible configuration structure is:
 

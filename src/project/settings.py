@@ -1,16 +1,23 @@
-from omegaconf import DictConfig
+import tomllib
+import warnings
 from pathlib import Path
 from typing import Any
-import warnings
-import tomllib
 
 import omegaconf
+from omegaconf import DictConfig
 
 
 def load_settings(*, warn_if_missing: bool = True):
     """Load settings from TOML config files using OmegaConf."""
 
-    config_files = sorted(Path("config").glob("*.toml"))
+    config_files = sorted(
+        p for p in Path("config").glob("*.toml") if not p.name.endswith(".example.toml")
+    )
+
+    # Load all shared files before any local files
+    shared = [p for p in config_files if not p.name.endswith(".local.toml")]
+    local = [p for p in config_files if p.name.endswith(".local.toml")]
+    config_files = shared + local
 
     # Load base and local config
     toml_configs = [read_toml_config(file) for file in config_files]
