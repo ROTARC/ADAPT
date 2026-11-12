@@ -12,7 +12,7 @@ output/**
 # Configuration files
 config/.*
 config/*.local.toml
-!config/*.template.toml
+!config/*.example.toml
 
 # Environments, editors, caches
 .venv/

@@ -121,7 +121,6 @@ organized and reproducible. Some important concepts are:
 Below is an overview of the main files/directories and their purpose:
 
 ```text
-├── .vscode/                 # Editor configuration
 ├── analysis/                # Scripts and notebooks for analysis
 ├── config/                  # Configuration files (TOML format)
 │   ├── .secrets.toml        # API keys, credentials (gitignored)
@@ -274,6 +273,7 @@ accessed with:
 
 ```python
 from project import load_settings
+
 settings = load_settings()
 ```
 
@@ -295,11 +295,13 @@ following structure:
 - Use `config/*.local.toml` for user-specific overrides, e.g., paths, that should not be
   shared with others. Files ending in `config/.local.toml` should not be committed to a
   git repository, and are therefore ignored using the `config/.gitignore` file.
-- Files that start with a dot, e.g., `config/.secrets.toml`, are ignored by git and
-  should not be committed to a git repository. These files can contain sensitive
-  information, such as API keys or credentials.
+- Files that start with a dot, e.g., `config/.secrets.toml`, are ignored by git
+  and should not be committed to a git repository. These files can contain
+  sensitive information, such as API keys or credentials. You can provide an
+  example file, e.g., `config/.secrets.example.toml`, that can be committed to
+  the repository. Make sure this DOES NOT contain any actual secrets.
 
-### Example configration file structure
+### Potential configration file structure
 
 A possible configuration structure is:
 
@@ -329,11 +331,12 @@ shared between computers. However, settings that are specific to the computer
 the code runs on (likely only the source path), should be in
 `config/*.local.toml` or another appropriately named TOML file that is loaded
 later alphabetically. If a local settings file is required, it is best to add an
-example template file, e.g., `config/10-paths.local.toml.template` to the
-repository.
+example file, e.g., `config/10-paths.local.example.toml` to the repository.
+(`config/*.local.toml` are ignored by git, but `config/*.local.example.toml`
+aren't).
 
 
-**Example `config/00-settings.toml`**:
+**Potential `config/00-settings.toml`**:
 
 ```toml
 [paths.data]
@@ -347,7 +350,7 @@ cuttof = 25  # Hz
 order = 4
 ```
 
-**Example `config/01-settings.local.toml`**:
+**Potential `config/01-settings.local.toml`**:
 
 ```toml
 [paths.data]
@@ -461,6 +464,7 @@ exist.
     ```python
     from gitpython import Repo
     import os
+
     repo = Repo(os.getcwd())
     short_commit_sha = repo.head.commit.hexsha[:7]
     ```
